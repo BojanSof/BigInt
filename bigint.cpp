@@ -46,6 +46,31 @@ BigInt::BigInt(std::string number){
 }
 
 /**
+    @brief const char* constructor.
+
+    @param number The number represented as char array.
+    @return nothing.
+*/
+BigInt::BigInt(const char* number){
+	if(number[0] == '-'){
+        sign = false;
+        for(unsigned int i = 1; i < strlen(number); i++)
+            digits.push_back(number[i] - '0');
+    } else{
+        sign = true;
+        if(number[0] == '+')
+            for(unsigned int i = 1; i < strlen(number); i++)
+                digits.push_back(number[i] - '0');
+        else
+            for(unsigned int i = 0; i < strlen(number); i++)
+                digits.push_back(number[i] - '0');
+    }
+
+    ignoreLeadingZeros();
+    if(digits.at(0) == 0)
+        sign = true;
+}
+/**
     @brief int constructor.
 
     @param number An integer number.

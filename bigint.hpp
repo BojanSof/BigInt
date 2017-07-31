@@ -10,6 +10,7 @@
 #define BIGINT_HPP
 
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -22,6 +23,7 @@ public:
     //Constructors
     BigInt(); //no argument constructor
     BigInt(std::string number); //std::string constructor
+	BigInt(const char* number); //const char* constructor
     BigInt(int number); //integer constructor
     BigInt(long number); //long integer constructor
     BigInt(long long number); //long long integer constructor
