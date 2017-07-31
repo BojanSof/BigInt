@@ -10,7 +10,8 @@ It is very easy to use:
 That's it :)
 Also be sure that your compiler supports C++11 standard and enable it
 
-##Code example
+## Code example
+
 ```c++
 #include "bigint.hpp"
 
@@ -24,7 +25,8 @@ int main()
 
 ```
 
-##TODO
+## TODO
+
 - Implement division and modulo operators
 - Make subtraction more efficient
 
