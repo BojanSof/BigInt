@@ -8,23 +8,11 @@
 
 #include "bigint.hpp"
 
-/**
-    @brief no argument constructor.
-
-    @param nothing.
-    @return nothing.
-*/
 BigInt::BigInt(){
     digits.push_back(0);
     sign = true;
 }
 
-/**
-    @brief std::string constructor.
-
-    @param number The number represented as std::string.
-    @return nothing.
-*/
 BigInt::BigInt(std::string number){
     if(number.at(0) == '-'){
         sign = false;
@@ -45,12 +33,6 @@ BigInt::BigInt(std::string number){
         sign = true;
 }
 
-/**
-    @brief const char* constructor.
-
-    @param number The number represented as char array.
-    @return nothing.
-*/
 BigInt::BigInt(const char* number){
 	if(number[0] == '-'){
         sign = false;
@@ -70,12 +52,7 @@ BigInt::BigInt(const char* number){
     if(digits.at(0) == 0)
         sign = true;
 }
-/**
-    @brief int constructor.
 
-    @param number An integer number.
-    @return nothing.
-*/
 BigInt::BigInt(int number){
     if(number < 0){
         sign = false;
@@ -93,12 +70,6 @@ BigInt::BigInt(int number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief long constructor.
-
-    @param number A long integer number.
-    @return nothing.
-*/
 BigInt::BigInt(long number){
     if(number < 0){
         sign = false;
@@ -116,12 +87,6 @@ BigInt::BigInt(long number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief long long constructor.
-
-    @param number A long long integer number.
-    @return nothing.
-*/
 BigInt::BigInt(long long number){
     if(number < 0){
         sign = false;
@@ -139,12 +104,6 @@ BigInt::BigInt(long long number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief unsigned int constructor.
-
-    @param number An unsigned integer number.
-    @return nothing.
-*/
 BigInt::BigInt(unsigned int number){
     sign = true;
     if(number == 0)
@@ -157,12 +116,6 @@ BigInt::BigInt(unsigned int number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief unsigned long constructor.
-
-    @param number An unsigned long integer number.
-    @return nothing.
-*/
 BigInt::BigInt(unsigned long number){
     sign = true;
     if(number == 0)
@@ -175,12 +128,6 @@ BigInt::BigInt(unsigned long number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief unsigned long long constructor.
-
-    @param number An unsigned long long integer number.
-    @return nothing.
-*/
 BigInt::BigInt(unsigned long long number){
     sign = true;
     if(number == 0)
@@ -193,46 +140,22 @@ BigInt::BigInt(unsigned long long number){
     ignoreLeadingZeros();
 }
 
-/**
-    @brief copy constructor.
-
-    @param constant BigInt reference.
-    @return nothing.
-*/
 BigInt::BigInt(const BigInt& rhs){
     sign = rhs.sign;
     digits.clear();
     digits = rhs.digits;
 }
 
-/**
-    @brief destructor.
-
-    @param nothing.
-    @return nothing.
-*/
 BigInt::~BigInt(){
 
 }
 
-/**
-    @brief erase leading zeros.
-
-    @param nothing.
-    @return nothing.
-*/
 void BigInt::ignoreLeadingZeros(){
     while(digits.at(0) == 0 && digits.size() != 1)
         digits.erase(digits.begin(), digits.begin() + 1);
 }
 
-/**
-    @brief convert BigInt to std::string.
-
-    @param nothing.
-    @return std::string of the BigInt.
-*/
-std::string BigInt::toString(){
+std::string BigInt::toString() const{
     std::string str = "";
     if(!sign)
         str+="-";
@@ -241,12 +164,6 @@ std::string BigInt::toString(){
     return str;
 }
 
-/**
-    @brief assignment operator.
-
-    @param constant reference to BigInt.
-    @return reference to BigInt.
-*/
 BigInt& BigInt::operator=(const BigInt& rhs){
     if(this == &rhs)
         return *this;
@@ -256,12 +173,6 @@ BigInt& BigInt::operator=(const BigInt& rhs){
     return *this;
 }
 
-/**
-    @brief input number via input stream.
-
-    @param reference to input stream, reference to BigInt.
-    @return reference to input stream.
-*/
 std::istream& operator>>(std::istream& inStream, BigInt& bigint){
     std::string number;
     inStream >> number;
@@ -287,12 +198,6 @@ std::istream& operator>>(std::istream& inStream, BigInt& bigint){
     return inStream;
 }
 
-/**
-    @brief output number via output stream.
-
-    @param reference to output stream, reference to BigInt.
-    @return reference to output stream.
-*/
 std::ostream& operator<<(std::ostream& outStream, BigInt& bigint){
     std::string number = bigint.toString();
     outStream << number;
@@ -375,12 +280,7 @@ bool BigInt::operator<=(const BigInt& rhs) const{
     else
         return false;
 }
-/**
-    @brief Returns absolute value of BigInt.
 
-    @param nothing.
-    @return BigInt.
-*/
 BigInt BigInt::abs() const{
     BigInt a(*this);
     if(a.sign == false) a.sign = true;
@@ -427,41 +327,46 @@ const BigInt BigInt::operator+(const BigInt& rhs) const{
 
 const BigInt BigInt::operator-(const BigInt& rhs) const{
     BigInt difference;
-    if(digits.at(0) == 0 && rhs.digits.at(0) == 0) return difference;
+    if((digits.at(0) == 0 && rhs.digits.at(0) == 0) || *this == rhs || this == &rhs) return difference;
     if(sign == rhs.sign){
         difference.digits.clear();
-        std::vector<unsigned int> operand1;
-        std::vector<unsigned int> operand2;
+        int index1, index2, borrow = 0;
         if(this->abs() > rhs.abs()){
-            operand1 = digits;
-            operand2 = rhs.digits;
+            index1 = digits.size() - 1;
+            index2 = rhs.digits.size() - 1;
             difference.sign = sign;
+            while(index1 >= 0 || index2 >= 0){
+                int d1 = (index1 >= 0) ? digits.at(index1) : 0;
+                int d2 = (index2 >= 0) ? rhs.digits.at(index2) : 0;
+                int digitdiff = d1 - d2 - borrow;
+                if(digitdiff < 0){
+                    borrow = 1;
+                    digitdiff += 10;
+                } else borrow = 0;
+                std::cout<<digitdiff<<std::endl;
+                difference.digits.push_back(digitdiff);
+                index1--;
+                index2--;
+            }
         } else{
-            operand1 = rhs.digits;
-            operand2 = digits;
+            index1 = rhs.digits.size() - 1;
+            index2 = digits.size() - 1;
             if(rhs.sign == false)
                 difference.sign = true;
             else
                 difference.sign = false;
-        }
-
-        if(operand1.size() != operand2.size()){
-            while(operand1.size() > operand2.size())
-                operand2.insert(operand2.begin(), 0);
-            while(operand2.size() > operand1.size())
-                operand1.insert(operand1.begin(), 0);
-        }
-        for(int i = operand1.size() - 1; i>=0; i--){
-            int j = i-1;
-            if(operand1[i] < operand2[i]){
-                while(operand1[j] == 0)
-                    j--;
-                for(int k = j+1; k<i; k++)
-                    operand1[k] += 9;
-                operand1[j] -= 1;
-                operand1[i] +=10;
+            while(index1 >= 0 || index2 >= 0){
+                int d1 = (index1 >= 0) ? rhs.digits.at(index1) : 0;
+                int d2 = (index2 >= 0) ? digits.at(index2) : 0;
+                int digitdiff = d1 - d2 - borrow;
+                if(digitdiff < 0){
+                    borrow = 1;
+                    digitdiff += 10;
+                } else borrow = 0;
+                difference.digits.push_back(digitdiff);
+                index1--;
+                index2--;
             }
-            difference.digits.push_back(operand1[i] - operand2[i]);
         }
         std::reverse(difference.digits.begin(), difference.digits.end());
         difference.ignoreLeadingZeros();
@@ -550,3 +455,31 @@ BigInt& BigInt::operator*=(const BigInt& rhs){
     *this = *this * rhs;
     return *this;
 }
+
+/*const BigInt BigInt::operator/(const BigInt& rhs) const{
+    BigInt quotient;
+    quotient.digits.clear();
+    BigInt temp;
+    BigInt op(*this);
+    size_t i = 0;
+    while(op > 0){
+        temp = 0;
+        while(temp < rhs){
+            temp += op.digits.at(i);
+            temp *= 10;
+            i++;
+        }
+        int count = 0;
+        while(temp > 0){
+            temp -= rhs;
+            count++;
+        }
+        quotient.digits.push_back(count);
+        BigInt t = rhs * count;
+        while(t.digits.size() != op.digits.size())
+            t *= 10;
+        op -= t;
+    }
+
+    return quotient;
+}*/

@@ -10,20 +10,19 @@
 #define BIGINT_HPP
 
 #include <algorithm>
+#include <climits>
 #include <cstring>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-enum class SIGN {NEGATIVE, NEUTRAL, POSITIVE};
-
 class BigInt{
 public:
     //Constructors
     BigInt(); //no argument constructor
     BigInt(std::string number); //std::string constructor
-    BigInt(const char* number); //const char* constructor
+	BigInt(const char* number); //const char* constructor
     BigInt(int number); //integer constructor
     BigInt(long number); //long integer constructor
     BigInt(long long number); //long long integer constructor
@@ -61,12 +60,13 @@ public:
     BigInt& operator--();
     BigInt operator++(int postfixflag);
     BigInt operator--(int postfixflag);
+
+    std::string toString() const; //convert BigInt to string
     //class methods
     BigInt abs() const; //returns absolute value of BigInt
 private:
     //private class helper methods
     void ignoreLeadingZeros(); //erase leading zeros in BigInt
-    std::string toString(); //convert BigInt to string
     BigInt digitMultiply(unsigned int digit) const; //multiply BigInt by digit
     //class members
     std::vector<unsigned int> digits; //vector of unsigned ints which holds the digits

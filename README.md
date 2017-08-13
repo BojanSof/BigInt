@@ -28,5 +28,4 @@ int main()
 ## TODO
 
 - Implement division and modulo operators
-- Make subtraction more efficient
 
