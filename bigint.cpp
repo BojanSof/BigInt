@@ -343,7 +343,6 @@ const BigInt BigInt::operator-(const BigInt& rhs) const{
                     borrow = 1;
                     digitdiff += 10;
                 } else borrow = 0;
-                std::cout<<digitdiff<<std::endl;
                 difference.digits.push_back(digitdiff);
                 index1--;
                 index2--;
@@ -455,31 +454,3 @@ BigInt& BigInt::operator*=(const BigInt& rhs){
     *this = *this * rhs;
     return *this;
 }
-
-/*const BigInt BigInt::operator/(const BigInt& rhs) const{
-    BigInt quotient;
-    quotient.digits.clear();
-    BigInt temp;
-    BigInt op(*this);
-    size_t i = 0;
-    while(op > 0){
-        temp = 0;
-        while(temp < rhs){
-            temp += op.digits.at(i);
-            temp *= 10;
-            i++;
-        }
-        int count = 0;
-        while(temp > 0){
-            temp -= rhs;
-            count++;
-        }
-        quotient.digits.push_back(count);
-        BigInt t = rhs * count;
-        while(t.digits.size() != op.digits.size())
-            t *= 10;
-        op -= t;
-    }
-
-    return quotient;
-}*/
